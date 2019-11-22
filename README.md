@@ -12,3 +12,8 @@ Overview -
 4. UI was created using HTML, JavaScript, JQuery and Flask App. 
 
 
+![GAN-Sample](https://github.com/darklord0794/Scribble-Prediction-CNN-GAN-/blob/master/gan-final_chart.png)
+
+![GAN-Loss](https://github.com/darklord0794/Scribble-Prediction-CNN-GAN-/blob/master/gan-loss.png)
+
+![WebApp](https://github.com/darklord0794/Scribble-Prediction-CNN-GAN-/blob/master/webapp.png)
