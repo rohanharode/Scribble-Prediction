@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Scribble Prediction</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+  <script>
+		if (typeof module === 'object') {
+			window.module = module;
+			module = undefined;
+		}
+	</script>
+  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script>
+		if (window.module) module = window.module;
+	</script>
+
+    <style>
+.btn-success{
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #5dade2;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 20px;
+  padding: 10px;
+  width: 100px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.btn-success span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.btn-success span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.btn-success:hover span {
+  padding-right: 25px;
+}
+
+.btn-success:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+.btn-info{
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #c0c0c0;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 20px;
+  padding: 10px;
+  width: 100px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+</style>
+</head>
+<script>
+  function plot() {
+
+    var canvas = document.getElementById("canvas");
+    document.getElementById("chartContainer").style.display = "block";
+    var ctx = canvas.getContext("2d");
+    var image = new Image();
+    image.onload = function() {
+      ctx.drawImage(image, 0, 0);
+    };
+    image.src = "{{putback}}"
+    document.getElementById("sel1").value = "{{net}}"
+    var preds = {{preds}}
+    var classes = {{classes | safe}}
+  }
+</script>
+<body>
+
+  <div class="container">
+    <div class="jumbotron">
+      <h1>Scribble Prediction</h1>
+      <p>Draw scribbles on canvas or use GAN generated images to predict. </p>
+        <p>'airplane', 'butterfly', 'car', 'cat', 'cell phone', 'envelope'</p>
+        <p> 'fish', 'hand', 'ladder', 't-shirt', 'tree', 'umbrella', 'wine bottle'</p>
+    </div>
+    <form method='POST' onsubmit="return prepare()">
+      <input type="hidden" id="payload" name="payload" value="x">
+      <div class="form-group">
+        <label for="sel3" style="margin-left:30%;font-size:20px;">Choose Type</label>
+        <select class="form-control btn btn-warning" name="type" id="sel3" style="margin-left:3%;width:14%">
+          <option>Canvas</option>
+          <option>GAN</option>
+        </select>
+        <br>
+        <br>
+        <br>
+        <label for="sel1" style="margin-left:7%;font-size:20px;">Draw on Canvas</label>
+        <label for="sel2" style="margin-left:30%;font-size:20px;">Choose GAN Image</label>
+        <select class="form-control btn btn-warning" name="gan" id="gan_category" style="margin-left:3%;width:14%">
+          <option>Airplane</option>
+          <option>WineBottle</option>
+          <option>Butterfly</option>
+          <option>Tshirt</option>
+          <option>Umbrella</option>
+        </select>
+        <br>
+        <br>
+      </div>
+      <div id = "showAirplane" class = "myDiv" style = "float:right;width:40%;">
+          <img src = "./static/Airplane.png" alt = "Airplane">
+      </div>
+      <div id = "showWineBottle" class = "myDiv" style = "float:right;width:40%;">
+          <img src = "./static/WineBottle.png" alt = "Wine Bottle">
+      </div>
+      <div id = "showButterfly" class = "myDiv" style = "float:right;width:40%;">
+          <img src = "./static/Butterfly.png" alt = "Butterfly">
+      </div>
+
+      <div id = "showTshirt" class = "myDiv" style = "float:right;width:40%;">
+          <img src = "./static/Tshirt.png" alt = "Tshirt">
+      </div>
+      <div id = "showUmbrella" class = "myDiv" style = "float:right;width:40%;">
+          <img src = "./static/Umbrella.png" alt = "Umbrella">
+      </div>
+      <!--
+      <div id = "showBanana" class = "myDiv" style = "float:right;width:40%;">
+          <img src = "./static/Banana.png" alt = "Banana">
+      </div>
+      <div id = "showGrapes" class = "myDiv" style = "float:right;width:40%;">
+          <img src = "./static/Grapes.png" alt = "Grapes">
+      </div>-->
+
+      <br>
+      <br>
+      <canvas id="canvas" width="280" height="280" style="float:center;border:8px solid; border-radius: 10px; cursor: crosshair;"></canvas>
+      <br>
+      <br>
+        <label style="margin-left:45%;font-size:20px;">Prediction - {{ preds }}</label>
+      <br>
+      <br>
+      <button type="submit" class="btn btn-success" style="margin-left:40%" id="predict"><span>Predict</span></button>
+      <button type="button" class="btn btn-info btn-warning" style="margin-left:5%" id="clearButton"><span>Clear</span></button>
+      <div id="chartContainer" style="margin-left: 350px;height: 300px; display:none"></div>
+
+      {% if chart %}
+      <script>
+        plot()
+      </script>
+      {% endif %}
+      <br>
+    </form>
+    <br>
+
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+    <script src="../static/index.js"></script>
+    <script type="text/javascript">
+      function prepare() {
+
+        var canvasObj = document.getElementById("canvas");
+        var img = canvasObj.toDataURL();
+        document.getElementById("payload").value = img;
+        return true;
+      }
+    </script>
+</body>
+</html>
