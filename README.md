@@ -13,6 +13,8 @@ Idea was inspired from Quick Draw dataset.
 
 Tech Stack - Python, Tensorflow, Electron JS, HTML, JQuery and Flask App. 
 
+NOTE: This project works in Tensorflow 2.x with v1 compatibility.
+
 
 Few images from WebApp and model - 
 
