@@ -1,10 +1,11 @@
 from prepare_data import *
 from sklearn.model_selection import train_test_split as tts
-from keras.models import Sequential
-from keras.layers import Dense, Dropout
+from keras.models import Sequential,Model
+from keras.layers import Input,Dense, Dropout
 from keras.utils import np_utils
 from nets.MLP import mlp
 from nets.conv import conv
+from nets.cnn_inception import inception_module
 from random import randint
 
 # define some constants
@@ -44,8 +45,18 @@ Y_train = np_utils.to_categorical(y_train, N_OBJECTS)
 Y_test = np_utils.to_categorical(y_test, N_OBJECTS)
 
 # use our custom designed ConvNet model
-model = conv(classes=N_OBJECTS, input_shape=(28, 28, 1))
+#model = conv(classes=N_OBJECTS, input_shape=(28, 28, 1))
+# input_layer = Input(shape=(28, 28, 1))
+# x  = inception_module(input_layer,
+#                      filters_1x1=64,
+#                      filters_3x3_reduce=96,
+#                      filters_3x3=128,
+#                      filters_5x5_reduce=16,
+#                      filters_5x5=32,
+#                      filters_pool_proj=32,
+#                      name='inception_3a')
 
+model = VGG16(input_shape=(28,28,1), weights=None, include_top=False)
 # use our custom designed MLP model
 # model = mlp(classes=N_FRUITS)
 
@@ -72,7 +83,7 @@ for i in range(len(preds)):
 print("Accuracy: ", ((score + 0.0) / len(preds)) * 100)
 
 #name = raw_input(">Enter name to save trained model: ")
-model.save('./models/objects_3.h5')
+model.save('./models/inception_v3.h5')
 print("Model saved")
 
 
