@@ -18,9 +18,18 @@ NOTE: This project works in Tensorflow 2.x with v1 compatibility.
 
 Few images from WebApp and model - 
 
+# Webapp - 
+
+![WebApp](https://github.com/rohanharode/Scribble-Prediction-CNN-GAN/blob/master/static/webapp.png)
+
+
+# GAN samples -
 
 ![GAN-Sample](https://github.com/darklord0794/Scribble-Prediction-CNN-GAN-/blob/master/gan-final_chart.png)
 
+
+# GAN Loss - 
+
 ![GAN-Loss](https://github.com/darklord0794/Scribble-Prediction-CNN-GAN-/blob/master/gan-loss.png)
 
-![WebApp](https://github.com/darklord0794/Scribble-Prediction-CNN-GAN-/blob/master/webapp.png)
+
