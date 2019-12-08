@@ -8,18 +8,20 @@
   <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
   <script>
-		if (typeof module === 'object') {
-			window.module = module;
-			module = undefined;
-		}
-	</script>
+    if (typeof module === 'object') {
+      window.module = module;
+      module = undefined;
+    }
+  </script>
   <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script>
-		if (window.module) module = window.module;
-	</script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    if (window.module) module = window.module;
+  </script>
 
     <style>
+
+
 .btn-success{
   display: inline-block;
   border-radius: 4px;
@@ -59,6 +61,11 @@
   opacity: 1;
   right: 0;
 }
+.btn-warning {
+color: #fff;
+background-color: steelblue;
+border-color: steelblue;
+}
 .btn-info{
   display: inline-block;
   border-radius: 4px;
@@ -73,6 +80,31 @@
   cursor: pointer;
   margin: 5px;
 }
+
+.myDiv{
+  float: right;
+  margin-top: 36px;
+  width: 300px;
+  display: block;
+  border-radius: 10px;
+  border: 8px solid;
+  height: 300px;
+  color: steelblue;
+  margin-right: -10px;
+  background-color: white;
+}
+
+.body{
+    /* The image used */
+    background-image: url('./static/scribble.jpg');
+
+    /* Full height */
+    height: 100%;
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
 </style>
 </head>
 <script>
@@ -86,78 +118,114 @@
       ctx.drawImage(image, 0, 0);
     };
     image.src = "{{putback}}"
-    document.getElementById("sel1").value = "{{net}}"
+
     var preds = {{preds}}
     var classes = {{classes | safe}}
+
+    var chart = new CanvasJS.Chart("chartContainer", {
+      theme: "light2",
+      animationEnabled: true,
+      title: {
+        text: "Detected Objects"
+      },
+      axisY : {
+        minimum: 0,
+        maximum: 100
+      },
+      data: [{
+        type: "pie",
+        startAngle: 240,
+        yValueFormatString: "##0.00\"%\"",
+        indexLabel: "{label} {y}",
+        dataPoints: [
+            {y: preds[6] * 100, label: classes[6]},
+            {y: preds[5] * 100, label: classes[5]},
+            {y: preds[4] * 100, label: classes[4]},
+            {y: preds[3] * 100, label: classes[3]},
+            {y: preds[2] * 100, label: classes[2]},
+            {y: preds[1] * 100, label: classes[1]},
+            {y: preds[0] * 100, label: classes[0]}
+        ]
+       }]
+    });
+    chart.render();
   }
 </script>
-<body>
-
+<body class = "body">
   <div class="container">
-    <div class="jumbotron">
-      <h1>Scribble Prediction</h1>
-      <p>Draw scribbles on canvas or use GAN generated images to predict. </p>
-        <p>'airplane', 'butterfly', 'car', 'cat', 'cell phone', 'envelope'</p>
-        <p> 'fish', 'hand', 'ladder', 't-shirt', 'tree', 'umbrella', 'wine bottle'</p>
+    <div  style="background: azure" class="jumbotron">
+
+      <h1 style="color:steelblue; text-align:center;">Scribble Prediction</h1>
+      <p style="color:steelblue; text-align:center;">Draw scribbles on canvas or use GAN generated images to predict. </p>
+            <h4 style="color:black; text-align:center;"> Following objects can be recognized.. </h4>
+      <p style="color:steelblue; text-align:center;">Airplane, Banana, Butterfly, Grapes, T-Shirt, Umbrella, Wine Bottle</p>
+
     </div>
     <form method='POST' onsubmit="return prepare()">
       <input type="hidden" id="payload" name="payload" value="x">
       <div class="form-group">
-        <label for="sel3" style="margin-left:30%;font-size:20px;">Choose Type</label>
-        <select class="form-control btn btn-warning" name="type" id="sel3" style="margin-left:3%;width:14%">
-          <option>Canvas</option>
+        <label for="sel3" style="margin-left:32%;font-size:25px;color:steelblue; background: whitesmoke;">Choose Type</label>
+        <select class="form-control btn btn-warning" name="type" id="sel3" style="margin-left:3%;width:14%; font-size:large;">
+          <option>CanvasCNN</option>
+          <option>CanvasMLP</option>
           <option>GAN</option>
         </select>
         <br>
         <br>
         <br>
-        <label for="sel1" style="margin-left:7%;font-size:20px;">Draw on Canvas</label>
-        <label for="sel2" style="margin-left:30%;font-size:20px;">Choose GAN Image</label>
-        <select class="form-control btn btn-warning" name="gan" id="gan_category" style="margin-left:3%;width:14%">
+        <label for="sel1" style="margin-left:7%;font-size:25px;color:steelblue; background: whitesmoke;">Draw on Canvas</label>
+        <label for="sel2" style="margin-left:30%;font-size:25px;color:steelblue; background: whitesmoke;">Choose GAN Image</label>
+        <select class="form-control btn btn-warning" name="gan" id="gan_category" style="margin-left:3%;width:14%; font-size:large;">
           <option>Airplane</option>
           <option>WineBottle</option>
           <option>Butterfly</option>
           <option>Tshirt</option>
           <option>Umbrella</option>
+          <option>Banana</option>
+          <option>Grapes</option>
         </select>
         <br>
         <br>
       </div>
-      <div id = "showAirplane" class = "myDiv" style = "float:right;width:40%;">
+      <div id = "showAirplane" class = "myDiv">
           <img src = "./static/Airplane.png" alt = "Airplane">
       </div>
-      <div id = "showWineBottle" class = "myDiv" style = "float:right;width:40%;">
+      <div id = "showWineBottle" class = "myDiv">
           <img src = "./static/WineBottle.png" alt = "Wine Bottle">
       </div>
-      <div id = "showButterfly" class = "myDiv" style = "float:right;width:40%;">
+      <div id = "showButterfly" class = "myDiv">
           <img src = "./static/Butterfly.png" alt = "Butterfly">
       </div>
 
-      <div id = "showTshirt" class = "myDiv" style = "float:right;width:40%;">
+      <div id = "showTshirt" class = "myDiv">
           <img src = "./static/Tshirt.png" alt = "Tshirt">
       </div>
-      <div id = "showUmbrella" class = "myDiv" style = "float:right;width:40%;">
+      <div id = "showUmbrella" class = "myDiv">
           <img src = "./static/Umbrella.png" alt = "Umbrella">
       </div>
-      <!--
-      <div id = "showBanana" class = "myDiv" style = "float:right;width:40%;">
+
+      <div id = "showBanana" class = "myDiv">
           <img src = "./static/Banana.png" alt = "Banana">
       </div>
-      <div id = "showGrapes" class = "myDiv" style = "float:right;width:40%;">
+
+      <div id = "showGrapes" class = "myDiv">
           <img src = "./static/Grapes.png" alt = "Grapes">
-      </div>-->
+      </div>
 
       <br>
       <br>
-      <canvas id="canvas" width="280" height="280" style="float:center;border:8px solid; border-radius: 10px; cursor: crosshair;"></canvas>
+      <canvas id="canvas" width="280" height="280" style="float:center;border:8px solid; border-radius: 10px; cursor: crosshair;color:steelblue;"></canvas>
       <br>
       <br>
-        <label style="margin-left:45%;font-size:20px;">Prediction - {{ preds }}</label>
+        <label style="margin-left:33%;font-size:40px;background: whitesmoke;">Prediction - {{ predicted }}</label>
       <br>
       <br>
+      <br>
+      <br>
+      <div id="chartContainer" style="margin-left: 30px;height: 400px; display:none"></div>
       <button type="submit" class="btn btn-success" style="margin-left:40%" id="predict"><span>Predict</span></button>
       <button type="button" class="btn btn-info btn-warning" style="margin-left:5%" id="clearButton"><span>Clear</span></button>
-      <div id="chartContainer" style="margin-left: 350px;height: 300px; display:none"></div>
+
 
       {% if chart %}
       <script>
@@ -166,14 +234,11 @@
       {% endif %}
       <br>
     </form>
-    <br>
-
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 
     <script src="../static/index.js"></script>
     <script type="text/javascript">
       function prepare() {
-
         var canvasObj = document.getElementById("canvas");
         var img = canvasObj.toDataURL();
         document.getElementById("payload").value = img;
