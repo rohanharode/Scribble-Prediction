@@ -1,4 +1,4 @@
-# Scribble-Prediction
+# Scribble Prediction
 
 Models - CNN, MLP, GAN
 
