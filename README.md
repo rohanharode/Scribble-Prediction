@@ -1,4 +1,6 @@
-# Scribble-Prediction-CNN-GAN
+# Scribble-Prediction
+
+Models - CNN, MLP, GAN
 
 This project aims at predicting scribbles from canvas and also using GAN generated images.
 
